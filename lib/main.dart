@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,7 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+bool TruefalseBool = true;
 var truefalse = true;
 var a;
 final dbHelper = DatabaseHelper();
@@ -44,11 +47,11 @@ Future<void> main() async {
   var box = await Hive.openBox('testBox');
 
   if (box.isEmpty) {
-    box.put('DisclaimerTFHive', 'true');
+    bool forfirstput = true;
+    box.put('DisclaimerTFHive', forfirstput);
   }
 
-  // String TruefalseString = box.get('DisclaimerTFHive');
-  // truefalse = TruefalseString.toBoolean();
+  TruefalseBool = box.get('DisclaimerTFHive');
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -73,7 +76,7 @@ class MyApp extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(NextLinkProvider.notifier).state = nextdatalink;
       ref.read(PreviousLinkProvider.notifier).state = previousdatalink;
-      //  ref.read(DisclaimerTFProvider.notifier).state = truefalse;
+      ref.read(DisclaimerTFProvider.notifier).state = TruefalseBool;
     });
 
     return MaterialApp.router(

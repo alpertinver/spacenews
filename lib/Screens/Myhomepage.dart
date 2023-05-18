@@ -146,7 +146,6 @@ This disclaimer statement may be modified at any time, and the updated version w
                       final data = snapshot.data!;
                       var nextdatalink = data["next"];
                       var previousdatalink = a["previous"];
-
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         ref.read(NextLinkProvider.notifier).state =
                             nextdatalink;
