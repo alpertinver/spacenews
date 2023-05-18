@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+var truefalse = true;
 var a;
 final dbHelper = DatabaseHelper();
 var mydbfunctions = dbfunctions();
@@ -38,11 +39,27 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   a = await _getArticles(link);
   await dbHelper.init();
-  next = Future.value(await _getArticles(a['next']));
+  next = await _getArticles(a['next']);
   await Hive.initFlutter();
   var box = await Hive.openBox('testBox');
 
+  if (box.isEmpty) {
+    box.put('DisclaimerTFHive', 'true');
+  }
+
+  // String TruefalseString = box.get('DisclaimerTFHive');
+  // truefalse = TruefalseString.toBoolean();
   runApp(ProviderScope(child: MyApp()));
+}
+
+extension StringExtension on String {
+  bool toBoolean() {
+    return (this.toLowerCase() == "true" || this.toLowerCase() == "1")
+        ? true
+        : (this.toLowerCase() == "false" || this.toLowerCase() == "0"
+            ? false
+            : a);
+  }
 }
 
 final GoRouter _router = Rotalar();
@@ -56,6 +73,7 @@ class MyApp extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(NextLinkProvider.notifier).state = nextdatalink;
       ref.read(PreviousLinkProvider.notifier).state = previousdatalink;
+      //  ref.read(DisclaimerTFProvider.notifier).state = truefalse;
     });
 
     return MaterialApp.router(

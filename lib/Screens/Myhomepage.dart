@@ -6,10 +6,10 @@ import 'package:spacenews/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:hive/hive.dart';
+import 'package:flutter/services.dart';
 
-var DisclaimerTrueFalsetf = true;
-var box;
-bool truefalse = true;
+var kutu = Hive.box('testBox');
+bool DisclaimerTrueFalsetf = true;
 var next;
 MapDatasToPage MAPDATAS = MapDatasToPage();
 
@@ -23,50 +23,105 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
+  void showDisclaimerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Disclaimer"),
+          content: const Text(
+              "I need your acceptance of the disclaimer to continue"),
+          actions: [
+            TextButton(
+              child: const Text("Quit"),
+              onPressed: () {
+                SystemNavigator.pop();
+                // Kullanıcının disclaimer'ı reddettiği durumu işleyebilirsiniz.
+              },
+            ),
+            TextButton(
+              child: const Text("Accept"),
+              onPressed: () {
+                ref.read(DisclaimerTFProvider.notifier).state = false;
+                Navigator.of(context).pop();
+                // Kullanıcının disclaimer'ı kabul ettiği durumu işleyebilirsiniz.
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    box = boxopen();
+    var disclaimerTFstring = ref.watch(DisclaimerTFProvider).toString();
+    bool truefboolref = disclaimerTFstring.toBoolean();
     return Scaffold(
-        drawer: AcilirMenu(),
+        drawer: const AcilirMenu(),
         appBar: AppBar(
           elevation: 4,
           title: Row(
             children: [
-              Center(child: const Text('Space News')),
-              ElevatedButton(
-                  onPressed: () async {
-                    var box = await Hive.openBox('testBox');
-                    await box.put('DisclaimerTrueFalse', true);
-                    DisclaimerTrueFalsetf = box.get('DisclaimerTrueFalse');
-                    print('TrueFalse: ${box.get('DisclaimerTrueFalse')}');
-                  },
-                  child: Icon(Icons.abc)),
+              const Center(child: Text('Space News')),
             ],
           ),
         ),
         bottomNavigationBar: BottomMethod(),
-        backgroundColor: Color.fromARGB(255, 78, 67, 67),
-        body: DisclaimerTrueFalsetf
-            ? Column(
-                children: [
-                  Center(
-                    child: Container(
-                      alignment: Alignment
-                          .bottomCenter, // Ortaya hizalamak için alignment ekleyin
-                      child: Column(
-                        children: [
-                          const Text(
-                              'Sorumluluk Reddi Beyanı:Bu mobil uygulama üzerinde sunulan haber içerikleri, yalnızca genel bilgilendirme amaçlıdır. Bu içeriklerindoğruluğu, eksiksizliği veya güncelliği konusunda herhangi bir garanti verilmemektedir. Kullanıcılar, bu içerikleri kendi riskleri ve takdirlerine göre kullanmalı ve gerekli önlemleri almalıdır.Bu mobil uygulama, diğer kaynaklara yönlendiren bağlantılar içerebilir. Bu bağlantılar, bilgi sağlama amacıyla sunulmuş olup, bağlantılı kaynakların içerikleri üzerinde kontrolümüz yoktur. Bu nedenle, bağlantılı kaynakların gizlilik politikalarını ve kullanım şartlarını okumanızı öneririz.Uygulama içeriği, hukuki, tıbbi veya profesyonel tavsiye yerine geçmez. Herhangi bir konuda uzman tavsiyesi almak için kendi bağımsız danışmanınıza başvurmanız önemle tavsiye edilir. Uygulama üzerinde sunulan bilgiler, hukuki konularla ilgili kararlar vermeden önce hukuki danışmanınızla görüşmeniz gerektiğini vurgular.Uygulamayı kullanmanız sonucunda ortaya çıkabilecek herhangi bir doğrudan veya dolaylı zarardan veya kayıptan sorumlu değiliz. Bu sorumluluk reddi beyanı, uygulamayı kullanan herkesi bağlar.Bu sorumluluk reddi beyanı, herhangi bir zamanda değiştirilebilir ve güncellenen sürümü geçerli olacaktır.'),
-                          ElevatedButton(
+        backgroundColor: const Color.fromARGB(255, 78, 67, 67),
+        body: truefboolref
+            ? SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Center(
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        padding: const EdgeInsets.all(
+                            16.0), // İçerik kenar boşlukları için padding ekleyin
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Disclaimer:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                            const SizedBox(
+                                height:
+                                    16.0), // Metin ile düğme arasına boşluk ekleyin
+                            const Text(
+                                '''The news content provided in this mobile application is for general informational purposes only. There is no guarantee of accuracy, completeness, or timeliness of these contents. Users should use this content at their own risk and discretion and take necessary precautions.\n\n
+This mobile application may contain links redirecting to other sources. These links are provided for informational purposes, and we have no control over the content of the linked sources. Therefore, we recommend reading the privacy policies and terms of use of the linked sources.\n\n
+The application content does not substitute for legal, medical, or professional advice. It is strongly advised to consult your independent advisor for expert advice on any subject. The information provided in the application emphasizes the need to consult your legal advisor before making decisions regarding legal matters.\n\n
+We are not liable for any direct or indirect damages or losses that may arise from using the application. This disclaimer statement binds anyone using the application.\n\n
+This disclaimer statement may be modified at any time, and the updated version will be applicable.''',
+                                textAlign: TextAlign.justify),
+                            const SizedBox(
+                                height:
+                                    16.0), // Metin ile düğme arasına boşluk ekleyin
+                            ElevatedButton(
                               onPressed: () {
+                                // var trueT = 'true';
+                                // kutu.put('DisclaimerTFHive', trueT);
                                 showDisclaimerDialog(context);
                               },
-                              child: Text('Accept'))
-                        ],
+                              child: const Text('Kabul Et'),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  debugPrint(
+                                      kutu.get('DisclaimerTFHive').toString());
+                                },
+                                child: const Text('sa'))
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
             : Column(children: [
                 FutureBuilder<Map<String, dynamic>>(
@@ -160,7 +215,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         ),
         title: Text(
           utf8.decode(snapshot.data!["results"][index]["title"].codeUnits),
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -168,7 +223,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         subtitle: Text(
           utf8.decode(snapshot.data!["results"][index]["news_site"].codeUnits),
           textAlign: TextAlign.end,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
           ),
         ),
@@ -208,7 +263,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       ],
       currentIndex: 1,
       selectedItemColor: Colors.black,
-      backgroundColor: Color.fromARGB(255, 237, 153, 153),
+      backgroundColor: const Color.fromARGB(255, 237, 153, 153),
       onTap: (value) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -216,8 +271,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             backgroundColor: Colors.green,
             content: Row(
               children: [
-                Text('New Page Is Loading Wait  '),
-                Expanded(
+                const Text('New Page Is Loading Wait  '),
+                const Expanded(
                   child: SizedBox(
                     width: 0,
                   ),
@@ -226,7 +281,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     textDirection: TextDirection.rtl, color: Colors.green[300]),
               ],
             ),
-            duration: Duration(seconds: 2), // Bildirim süresi
+            duration: const Duration(seconds: 2), // Bildirim süresi
           ),
         );
 
@@ -277,25 +332,27 @@ class AcilirMenu extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             height: 120,
-            child: Text('Space News', style: TextStyle(color: Colors.white)),
-            decoration: BoxDecoration(color: Colors.black),
+            child:
+                const Text('Space News', style: TextStyle(color: Colors.white)),
+            decoration: const BoxDecoration(color: Colors.black),
           ),
-          SizedBox(
+          const SizedBox(
             height: 6,
           ),
           ElevatedButton(
-              style: ButtonStyle(),
+              style: const ButtonStyle(),
               onPressed: () {
                 context.go(
                   '/launches',
                 );
               },
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 alignment: Alignment.center,
                 height: 60,
-                child: Text('Launches', style: TextStyle(color: Colors.white)),
-                decoration: BoxDecoration(
+                child: const Text('Launches',
+                    style: TextStyle(color: Colors.white)),
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(19)),
                   color: Colors.blue,
                 ),
@@ -306,35 +363,7 @@ class AcilirMenu extends StatelessWidget {
   }
 }
 
-void showDisclaimerDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Disclaimer"),
-        content: Text("I need your consent to proceed."),
-        actions: [
-          TextButton(
-            child: Text("Decline"),
-            onPressed: () {
-              // Kullanıcının disclaimer'ı reddettiği durumu işleyebilirsiniz.
-            },
-          ),
-          TextButton(
-            child: Text("Accept"),
-            onPressed: () {
-              Navigator.of(context).pop();
-              // Kullanıcının disclaimer'ı kabul ettiği durumu işleyebilirsiniz.
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
 Future<Box> boxopen() async {
-  var box = await Hive.openBox('testBox');
-  return box;
+  var hivebox = await Hive.openBox('testBox');
+  return hivebox;
 }

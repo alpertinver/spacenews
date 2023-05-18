@@ -35,6 +35,12 @@ final GosterProvider = StateProvider<dynamic>((ref) {
   return a;
 });
 
+final DisclaimerTFProvider = StateProvider<bool>((ref) {
+  var a;
+  a = true;
+  return a;
+});
+
 class MapDatasToPage {
   final TitleProvider = StateProvider<String>((ref) {
     var Title = 'a';
