@@ -41,7 +41,7 @@ Future<Map<String, dynamic>> _getArticles(String link) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   a = await _getArticles(link);
-  await dbHelper.init();
+  // await dbHelper.init();
   next = await _getArticles(a['next']);
   await Hive.initFlutter();
   var box = await Hive.openBox('testBox');
@@ -52,6 +52,7 @@ Future<void> main() async {
   }
 
   TruefalseBool = box.get('DisclaimerTFHive');
+
   runApp(ProviderScope(child: MyApp()));
 }
 

@@ -9,7 +9,6 @@ import 'package:hive/hive.dart';
 import 'package:flutter/services.dart';
 
 var kutu = Hive.box('testBox');
-bool DisclaimerTrueFalsetf = true;
 var next;
 MapDatasToPage MAPDATAS = MapDatasToPage();
 
@@ -56,8 +55,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var disclaimerTFstring = ref.watch(DisclaimerTFProvider).toString();
-    bool truefboolref = disclaimerTFstring.toBoolean();
     return Scaffold(
         drawer: const AcilirMenu(),
         appBar: AppBar(
@@ -70,7 +67,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         ),
         bottomNavigationBar: BottomMethod(),
         backgroundColor: const Color.fromARGB(255, 78, 67, 67),
-        body: truefboolref
+        body: ref.watch(DisclaimerTFProvider)
             ? SingleChildScrollView(
                 child: Column(
                   children: [
@@ -113,7 +110,10 @@ This disclaimer statement may be modified at any time, and the updated version w
                             ElevatedButton(
                                 onPressed: () {
                                   debugPrint(
-                                      kutu.get('DisclaimerTFHive').toString());
+                                      // kutu.get('DisclaimerTFHive').toString(),
+                                      ref
+                                          .read(DisclaimerTFProvider)
+                                          .toString());
                                 },
                                 child: const Text('sa'))
                           ],

@@ -37,7 +37,7 @@ final GosterProvider = StateProvider<dynamic>((ref) {
 
 final DisclaimerTFProvider = StateProvider<bool>((ref) {
   var a;
-  a = true;
+  a = false;
   return a;
 });
 
