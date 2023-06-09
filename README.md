@@ -1,4 +1,4 @@
-# spacenews
+# Space News
 This Flutter application, which we have developed for those who are curious about the mysteries and latest developments, allows you to follow the current space news instantly.
 
 Space News offers you the latest developments using up-to-date data from the world's leading space agencies and scientific sources, thanks to its API integration. This app is developed using Flutter language![WhatsApp Görsel 2023-05-21 saat 20 16 25](https://github.com/alpertinver/spacenews/assets/121678825/7ccbafd7-071a-45f8-a979-8ee28e6568e6)
